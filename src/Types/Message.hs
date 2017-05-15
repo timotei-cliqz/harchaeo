@@ -13,10 +13,9 @@ import GHC.Generics
 -- * Attachments
 
 data Attachment = Attachment
-    { service_name      :: !Text
-    , title             :: !Text
-    , from_url          :: !Text
-    , image_url         :: !Text
+    { title             :: !(Maybe Text)
+    , image_url         :: !(Maybe Text)
+    , from_url          :: !(Maybe Text)
     } deriving (Eq, Show, Generic)
 
 instance ToJSON Attachment
@@ -37,11 +36,11 @@ instance FromJSON Reaction
 -- * Message
 
 data Message = Message
-    { user          :: !Text
-    , text          :: !Text
+    { user          :: !(Maybe Text)
+    , reactions     :: !(Maybe [Reaction])
+    , attachments   :: !(Maybe [Attachment])
+    , text          :: !(Maybe Text)
     , ts            :: !Text
-    , reactions     :: ![Reaction]
-    , attachments   :: ![Attachment]
     } deriving (Eq, Show, Generic)
 
 instance ToJSON Message
