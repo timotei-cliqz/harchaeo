@@ -2,12 +2,12 @@
 module Main where
 
 import System.Environment (getArgs)
-import Lib
+import Lib (loadFromDirectory, run)
 
 main :: IO ()
 main = do
     [path] <- getArgs
     json <- loadFromDirectory path
     case json of
-        Left error -> putStrLn error
+        Left err -> putStrLn err
         Right archive -> run archive

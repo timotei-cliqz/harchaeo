@@ -1,16 +1,30 @@
 # harchaeo
 
-To run the server:
+## Setup
+
 ```sh
 $ stack setup
 $ stack build
-$ stack exec harchaeo-exe -- <path to uncompressed export>
+```
+
+## Backend
+
+To run the server:
+```sh
+$ stack exec backend -- <path to uncompressed export>
 ```
 
 Query:
 ```sh
-$ curl http://127.0.0.1:3000/channel
-$ curl http://127.0.0.1:3000/channel/general
+$ curl http://localhost:8000/channel
+$ curl http://localhost:8000/channel/general
+```
+
+## Generate Elm code
+
+To generate elm code interfacing with the backend:
+```sh
+$ stack exec codegen
 ```
 
 # TODO

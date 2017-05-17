@@ -17,17 +17,17 @@ import           System.IO
 import Data.Text (Text)
 import Data.Map (lookup)
 
-import Archive
-import Types.Channel
-import Types.User
-import Types.Message (Message)
+import Archive          (Archive, messages, channels)
+import Types.Channel    (Channel)
+import Types.User       (User)
+import Types.Message    (Message)
 
 
 -- * api
 
 type ChannelApi =
   "channel" :> Get '[JSON] [Channel] :<|>
-  "channel" :> Capture "channel" Text :> Get '[JSON] [Message]
+  "channel" :> Capture "name" Text :> Get '[JSON] [Message]
 
 channelApi :: Proxy ChannelApi
 channelApi = Proxy
@@ -36,7 +36,7 @@ channelApi = Proxy
 
 run :: Archive -> IO ()
 run archive = do
-  let port = 3000
+  let port = 8000
       settings =
         setPort port $
         setBeforeMainLoop (hPutStrLn stderr ("listening on port " ++ show port))
@@ -49,13 +49,13 @@ run archive = do
     server :: Server ChannelApi
     server =
       getChannels :<|>
-      getChannelById
+      getChannelByName
 
     getChannels :: Handler [Channel]
     getChannels = return . channels $ archive
 
-    getChannelById :: Text -> Handler [Message]
-    getChannelById name =
+    getChannelByName :: Text -> Handler [Message]
+    getChannelByName name =
         case lookup name (messages archive) of
             Nothing -> throwE err404
             Just result -> return result

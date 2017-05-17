@@ -1,11 +1,13 @@
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DeriveAnyClass #-}
 
 module Types.User where
 
-
-import Data.Text (Text)
-import Data.Aeson
 import GHC.Generics
+
+import Elm          (ElmType)
+import Data.Text    (Text)
+import Data.Aeson   (FromJSON, ToJSON)
 
 
 -- * Profile
@@ -23,10 +25,7 @@ data Profile = Profile
     , real_name             :: !Text
     , real_name_normalized  :: !Text
     , email                 :: !Text
-    } deriving (Eq, Show, Generic)
-
-instance ToJSON Profile
-instance FromJSON Profile
+    } deriving (Eq, Show, Generic, ToJSON, FromJSON, ElmType)
 
 
 -- * User
@@ -43,7 +42,4 @@ data User = User
     , is_ultra_restricted   :: !Bool
     , is_bot                :: !Bool
     , profile               :: !Profile
-    } deriving (Eq, Show, Generic)
-
-instance ToJSON User
-instance FromJSON User
+    } deriving (Eq, Show, Generic, ToJSON, FromJSON, ElmType)

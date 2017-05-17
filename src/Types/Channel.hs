@@ -1,11 +1,13 @@
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DeriveAnyClass #-}
 
 module Types.Channel where
 
-
-import Data.Text (Text)
-import Data.Aeson
 import GHC.Generics
+
+import Elm          (ElmType)
+import Data.Text    (Text)
+import Data.Aeson   (FromJSON, ToJSON)
 
 
 -- * Channel
@@ -18,7 +20,4 @@ data Channel = Channel
     , is_archived   :: !Bool
     , is_general    :: !Bool
     , members       :: ![Text]
-    } deriving (Eq, Show, Generic)
-
-instance ToJSON Channel
-instance FromJSON Channel
+    } deriving (Eq, Show, Generic, ToJSON, FromJSON, ElmType)
