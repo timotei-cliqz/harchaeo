@@ -8,11 +8,12 @@ module Api where
 
 import Prelude hiding (lookup)
 
-import           Control.Monad.Trans.Except
-import           Network.Wai
-import           Network.Wai.Handler.Warp
-import           Servant
-import           System.IO
+import Control.Monad.Trans.Except
+import Network.Wai
+import Network.Wai.Handler.Warp
+import Servant
+import Servant.Utils.StaticFiles
+import System.IO
 
 import Data.Text (Text)
 import Data.Map (lookup)
@@ -29,8 +30,10 @@ type ChannelApi =
   "channel" :> Get '[JSON] [Channel] :<|>
   "channel" :> Capture "name" Text :> Get '[JSON] [Message]
 
-channelApi :: Proxy ChannelApi
-channelApi = Proxy
+type FullApi = ChannelApi :<|> Raw
+
+fullApi :: Proxy FullApi
+fullApi = Proxy
 
 -- * app
 
@@ -44,12 +47,13 @@ run archive = do
   runSettings settings =<< mkApp
   where
     mkApp :: IO Application
-    mkApp = return $ serve channelApi server
+    mkApp = return $ serve fullApi server
 
-    server :: Server ChannelApi
+    server :: Server FullApi
     server =
-      getChannels :<|>
-      getChannelByName
+      (getChannels :<|>
+      getChannelByName) :<|>
+      serveDirectory "./"
 
     getChannels :: Handler [Channel]
     getChannels = return . channels $ archive
