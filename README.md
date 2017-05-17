@@ -3,7 +3,7 @@
 ## Quick start
 
 It will expect the find a directory named `archive` in your current directory
-which is the extracted archive of a slack export.
+which is the compressed (or uncompressed) archive of a slack export.
 ```sh
 $ make run
 ```
@@ -21,7 +21,7 @@ $ stack build
 
 To run the server:
 ```sh
-$ stack exec backend -- <path to uncompressed export>
+$ stack exec backend -- <path compressed export>
 ```
 
 Query:
@@ -39,6 +39,5 @@ $ stack exec codegen
 
 # TODO
 
-1. Allow importing from an archive
-2. Implement Elm front-end
-3. Clean-up and comment code
+1. Implement Elm front-end
+2. Clean-up and comment code

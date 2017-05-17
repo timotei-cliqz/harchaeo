@@ -1,4 +1,4 @@
-module Lib (run, loadFromDirectory) where
+module Lib (run, loadArchive) where
 
 import Api (run)
-import Archive (loadFromDirectory)
+import Archive (loadArchive)

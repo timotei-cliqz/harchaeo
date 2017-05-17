@@ -35,6 +35,8 @@ library
                      , transformers
                      , wai
                      , warp
+                     , zip-archive
+                     , random
   default-language:    Haskell2010
 
 executable codegen

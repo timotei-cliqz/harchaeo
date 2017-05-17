@@ -1,7 +1,6 @@
 
 module Archive where
 
-import qualified Data.ByteString.Lazy as B
 import Control.Monad (forM)
 import Data.Aeson
 import Data.Either (either)
@@ -10,7 +9,11 @@ import Data.Map (Map, empty, singleton, unions)
 import Data.Text (Text, unpack)
 import System.Directory (listDirectory)
 import System.FilePath.Posix
+import System.Random (randomIO)
 import Text.Printf (printf)
+import System.Directory (removeDirectoryRecursive)
+import qualified Codec.Archive.Zip as Z
+import qualified Data.ByteString.Lazy as B
 
 import Types.Channel (Channel, name)
 import Types.Message (Message, ts)
@@ -66,4 +69,22 @@ loadFromDirectory path = do
 
 
 loadFromArchive :: FilePath -> IO (Either String Archive)
-loadFromArchive _ = return (Left "Error")
+loadFromArchive path = do
+    -- Extract zip archive into a temporary directory
+    content <- B.readFile path
+    let zipArchive = Z.toArchive content
+    randomNumber <- randomIO :: IO Int
+    let destination = "/tmp/archive" ++ (show randomNumber)
+    putStrLn $ "Extract archive into: " ++ destination
+    Z.extractFilesFromArchive [Z.OptDestination destination] zipArchive
+    -- Parse the content of the slack export into an Archive
+    archive <- loadFromDirectory destination
+    -- Clean-up temporary directory
+    removeDirectoryRecursive destination
+    return archive
+
+
+loadArchive :: FilePath -> IO (Either String Archive)
+loadArchive path
+    | takeExtension path == ".zip" = loadFromArchive path
+    | otherwise                    = loadFromDirectory path
