@@ -31,7 +31,7 @@ import Types.User    (User, Profile)
 elmOpts :: ElmOptions
 elmOpts =
   defElmOptions
-    { urlPrefix = Static "http://localhost:8000/api" }
+    { urlPrefix = Static "http://localhost:8000" }
 
 spec :: Spec
 spec =

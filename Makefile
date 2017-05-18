@@ -22,8 +22,9 @@ frontend: index.html frontend/src/Generated/Api.elm
 frontend/src/Generated/Api.elm: codegen
 	stack exec codegen
 
+.PHONY: index.html
 index.html:
 	elm-make frontend/src/Main.elm
 
 run: frontend backend
-	stack exec backend -- ./archive
+	stack exec backend -- ./archive.zip
