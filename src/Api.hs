@@ -1,5 +1,4 @@
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE OverloadedStrings #-}
 
@@ -12,13 +11,12 @@ import Control.Monad.Trans.Except
 import Network.Wai
 import Network.Wai.Handler.Warp
 import Servant
-import Servant.Utils.StaticFiles
 import System.IO
 
 import Data.Text (Text)
 import Data.Map (lookup)
 
-import Archive          (Archive, messages, channels)
+import Archive          (Archive, getMessages, getChannels, getUsers)
 import Types.Channel    (Channel)
 import Types.User       (User)
 import Types.Message    (Message)
@@ -26,40 +24,48 @@ import Types.Message    (Message)
 
 -- * api
 
-type ChannelApi =
+type ArchiveApi =
   "channel" :> Get '[JSON] [Channel] :<|>
-  "channel" :> Capture "name" Text :> Get '[JSON] [Message]
+  "channel" :> Capture "name" Text :> Get '[JSON] [Message] :<|>
+  "user"    :> Get '[JSON] [User]
 
-type FullApi = ChannelApi :<|> Raw
+type FullApi = ArchiveApi :<|> Raw
 
 fullApi :: Proxy FullApi
 fullApi = Proxy
 
 -- * app
 
-run :: Archive -> IO ()
-run archive = do
-  let port = 8000
-      settings =
+run :: Archive -> Int -> IO ()
+run archive port = do
+  let settings =
         setPort port $
         setBeforeMainLoop (hPutStrLn stderr ("listening on port " ++ show port))
         defaultSettings
   runSettings settings =<< mkApp
   where
+    -- API
+
     mkApp :: IO Application
     mkApp = return $ serve fullApi server
 
     server :: Server FullApi
     server =
-      (getChannels :<|>
-      getChannelByName) :<|>
-      serveDirectory "./"
+      (    getChannelsHandler
+      :<|> getChannelByNameHandler
+      :<|> getUsersHandler)
+      :<|> serveDirectory "./"
 
-    getChannels :: Handler [Channel]
-    getChannels = return . channels $ archive
+    -- Handlers
 
-    getChannelByName :: Text -> Handler [Message]
-    getChannelByName name =
-        case lookup name (messages archive) of
+    getChannelsHandler :: Handler [Channel]
+    getChannelsHandler = return $ getChannels archive
+
+    getChannelByNameHandler :: Text -> Handler [Message]
+    getChannelByNameHandler name =
+        case lookup name (getMessages archive) of
             Nothing -> throwE err404
             Just result -> return result
+
+    getUsersHandler :: Handler [User]
+    getUsersHandler = return (getUsers archive)

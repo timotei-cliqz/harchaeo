@@ -8,6 +8,7 @@ import GHC.Generics
 import Elm          (ElmType)
 import Data.Text    (Text)
 import Data.Aeson   (FromJSON, ToJSON)
+import Types.User   (UserId)
 
 
 -- TODO: Deal with file_share subtype of messages
@@ -15,25 +16,31 @@ import Data.Aeson   (FromJSON, ToJSON)
 
 -- * Attachments
 
+type Title = Text
+type Url = Text
+
 data Attachment = Attachment
-    { title             :: !(Maybe Text)
-    , image_url         :: !(Maybe Text)
-    , from_url          :: !(Maybe Text)
+    { title             :: !(Maybe Title)
+    , image_url         :: !(Maybe Url)
+    , from_url          :: !(Maybe Url)
     } deriving (Eq, Show, Generic, ToJSON, FromJSON, ElmType)
 
 
 -- * Reaction
 
+type Emoji = Text
+
 data Reaction = Reaction
-    { name      :: !Text
-    , users     :: ![Text]
+    { name      :: !Emoji
+    , users     :: ![UserId]
     , count     :: !Int
     } deriving (Eq, Show, Generic, ToJSON, FromJSON, ElmType)
 
 -- * Message
 
+
 data Message = Message
-    { user          :: !(Maybe Text)
+    { user          :: !(Maybe UserId)
     , reactions     :: !(Maybe [Reaction])
     , attachments   :: !(Maybe [Attachment])
     , text          :: !(Maybe Text)

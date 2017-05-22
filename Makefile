@@ -17,7 +17,7 @@ build: setup
 backend: build
 codegen: build
 
-frontend: index.html frontend/src/Generated/Api.elm
+frontend: frontend/src/Generated/Api.elm index.html
 
 frontend/src/Generated/Api.elm: codegen
 	stack exec codegen
@@ -27,4 +27,4 @@ index.html:
 	elm-make frontend/src/Main.elm
 
 run: frontend backend
-	stack exec backend -- ./archive.zip
+	stack exec backend -- --path ./archive.zip

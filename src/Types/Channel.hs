@@ -8,15 +8,18 @@ import GHC.Generics
 import Elm          (ElmType)
 import Data.Text    (Text)
 import Data.Aeson   (FromJSON, ToJSON)
+import Types.User   (UserId)
 
 
 -- * Channel
 
+type ChannelId = Text
+
 data Channel = Channel
-    { id            :: !Text
+    { id            :: !ChannelId
     , name          :: !Text
+    , creator       :: !UserId
     , created       :: !Text
-    , creator       :: !Text
     , is_archived   :: !Bool
     , is_general    :: !Bool
     , members       :: ![Text]

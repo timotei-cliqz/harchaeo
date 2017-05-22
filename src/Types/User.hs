@@ -13,33 +13,35 @@ import Data.Aeson   (FromJSON, ToJSON)
 -- * Profile
 
 data Profile = Profile
-    { avatar_hash           :: !Text
-    , image_24              :: !Text
-    , image_32              :: !Text
-    , image_48              :: !Text
-    , image_72              :: !Text
-    , image_192             :: !Text
-    , image_512             :: !Text
-    , image_1024            :: !Text
-    , image_original        :: !Text
-    , real_name             :: !Text
-    , real_name_normalized  :: !Text
-    , email                 :: !Text
+    { avatar_hash           :: !(Maybe Text)
+    , image_24              :: !(Maybe Text)
+    , image_32              :: !(Maybe Text)
+    , image_48              :: !(Maybe Text)
+    , image_72              :: !(Maybe Text)
+    , image_192             :: !(Maybe Text)
+    , image_512             :: !(Maybe Text)
+    , image_1024            :: !(Maybe Text)
+    , image_original        :: !(Maybe Text)
+    , real_name             :: !(Maybe Text)
+    , email                 :: !(Maybe Text)
     } deriving (Eq, Show, Generic, ToJSON, FromJSON, ElmType)
 
 
 -- * User
 
+type UserId = Text
+type UserName = Text
+
 data User = User
-    { id                    :: !Text
-    , name                  :: !Text
-    , color                 :: !Text
-    , deleted               :: !Bool
-    , is_admin              :: !Bool
-    , is_owner              :: !Bool
-    , is_primary_owner      :: !Bool
-    , is_restricted         :: !Bool
-    , is_ultra_restricted   :: !Bool
-    , is_bot                :: !Bool
-    , profile               :: !Profile
+    { id                    :: !UserId
+    , name                  :: !UserName
+    , color                 :: !(Maybe Text)
+    , deleted               :: !(Maybe Bool)
+    , is_admin              :: !(Maybe Bool)
+    , is_owner              :: !(Maybe Bool)
+    , is_primary_owner      :: !(Maybe Bool)
+    , is_restricted         :: !(Maybe Bool)
+    , is_ultra_restricted   :: !(Maybe Bool)
+    , is_bot                :: !(Maybe Bool)
+    , profile               :: !(Maybe Profile)
     } deriving (Eq, Show, Generic, ToJSON, FromJSON, ElmType)
