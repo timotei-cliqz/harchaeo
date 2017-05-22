@@ -87,14 +87,14 @@ filterMessages pattern strings =
 
 
 view : Model -> Html Msg
-view ({ channels ,currentMessages, pattern }) =
+view ({ channels, currentChannel, currentMessages, pattern }) =
     let
         strings = getMessages currentMessages
         messages = filterMessages pattern strings
         --channel_names = List.map (\t -> t.name) channels
     in
         div [] -- * container with channel div and messages div
-          [ channelComponent channels
+          [ channelComponent channels currentChannel
           , messagesComponent messages
           ]
 
@@ -105,11 +105,11 @@ subscriptions : Model -> Sub Msg
 subscriptions model = Sub.none
 
 -- * VISUAL COMPONENTS
-
-channelComponent channels =
+channelComponent : (List Channel) -> (Maybe String) -> Html.Html Msg
+channelComponent channels currentChannel =
     div [inlineStyle, sclollableContainerStyle, channelsStyle, channelPrimaryBgColor]
       [ channelHeader
-      , channelNames channels
+      , channelNames channels currentChannel
       ]
 
 channelHeader =
@@ -121,13 +121,22 @@ channelHeader =
         ]
       ]
 
-channelNames channels =
-    div [] (List.map (\t -> channelName t) channels)
+channelNames : (List Channel) -> (Maybe String) -> Html.Html Msg
+channelNames channels currentChannel =
+    div [] (List.map (\t -> channelName t currentChannel) channels)
 
-channelName channel =
-    div [sansSerifFont, channelNamesStyle, channelPrimaryFontColor, onClick (Channel channel)]
-      [ text ("#" ++ channel.name)
-      ]
+channelName : (Channel) -> (Maybe String) -> Html.Html Msg
+channelName channel currentChannel =
+    case currentChannel of
+      Just c ->
+        div [sansSerifFont, channelNamesStyle, if channel.name == c then whiteFontColor else channelPrimaryFontColor, onClick (Channel channel)]
+          [ text ("#" ++ channel.name)
+          ]
+      Nothing ->
+        div [sansSerifFont, channelNamesStyle, channelPrimaryFontColor, onClick (Channel channel)]
+          [ text ("#" ++ channel.name)
+          ]
+
 
 messagesComponent messages =
     div [inlineStyle, sclollableContainerStyle, messageContainerStyle]
