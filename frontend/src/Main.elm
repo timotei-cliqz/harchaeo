@@ -105,7 +105,7 @@ subscriptions : Model -> Sub Msg
 subscriptions model = Sub.none
 
 -- * VISUAL COMPONENTS
-channelComponent : (List Channel) -> (Maybe String) -> Html.Html Msg
+
 channelComponent channels currentChannel =
     div [inlineStyle, sclollableContainerStyle, channelsStyle, channelPrimaryBgColor]
       [ channelHeader
@@ -113,30 +113,30 @@ channelComponent channels currentChannel =
       ]
 
 channelHeader =
-    div []
-      [ div [whiteFontColor] [text "Cliqz"]
+    div [channelHeaderStyle]
+      [ div [whiteFontColor, boldFontStyle, sansSerifFont, cliqzStyle] [text "Cliqz"]
       , div []
         [ div [circleStyle, inlineStyle] []
-        , div [inlineStyle, channelPrimaryFontColor] [text "Slack History"]
+        , div [inlineStyle, channelPrimaryFontColor, sansSerifFont, style [("margin-left", "6px"), ("font-size", "14px")]] [text "Slack History"]
         ]
       ]
 
-channelNames : (List Channel) -> (Maybe String) -> Html.Html Msg
 channelNames channels currentChannel =
-    div [] (List.map (\t -> channelName t currentChannel) channels)
+    div [style [("margin-top", "14px")]]
+      [ div [channelPrimaryFontColor, mediumLightFontStyle, sansSerifFont, style [("font-size", "12px"), ("margin-bottom", "8px"), ("padding-left", "17px")]] [text ("CHANNELS (" ++ (toString (List.length channels) ++ ")"))]
+      , div [] (List.map (\t -> channelName t currentChannel) channels)
+      ]
 
-channelName : (Channel) -> (Maybe String) -> Html.Html Msg
 channelName channel currentChannel =
     case currentChannel of
       Just c ->
-        div [sansSerifFont, channelNamesStyle, if channel.name == c then whiteFontColor else channelPrimaryFontColor, onClick (Channel channel)]
-          [ text ("#" ++ channel.name)
+        div [sansSerifFont, channelNamesStyle, if channel.name == c then channelNameSelectedStyle else channelPrimaryFontColor, onClick (Channel channel)]
+          [ text ("# " ++ channel.name)
           ]
       Nothing ->
         div [sansSerifFont, channelNamesStyle, channelPrimaryFontColor, onClick (Channel channel)]
-          [ text ("#" ++ channel.name)
+          [ text ("# " ++ channel.name)
           ]
-
 
 messagesComponent messages =
     div [inlineStyle, sclollableContainerStyle, messageContainerStyle]
@@ -165,14 +165,44 @@ sclollableContainerStyle =
 
 channelsStyle =
   style
-    [ ("width", "20%")
+    [ ("width", "16%")
     , ("float", "left")
     ]
+
+channelHeaderStyle =
+  style
+    [ ("padding-left", "17px")
+    , ("margin-top", "14px")
+    , ("margin-bottom", "10px")
+    ]
+
+boldFontStyle =
+  style
+    [("font-weight", "700")]
+
+mediumLightFontStyle =
+  style
+    [("font-weight", "600")]
+
+cliqzStyle =
+  style
+    [("margin-bottom", "4px")]
 
 channelNamesStyle =
   style
     [ ("font-size", "16px")
     , ("text-align", "left")
+    , ("margin-right", "20px")
+    , ("padding-top", "3px")
+    , ("padding-bottom", "3px")
+    , ("padding-left", "22px")
+    ]
+channelNameSelectedStyle =
+  style
+    [ ("color", "#FFFFFF")
+    , ("background", "#4C9689")
+    , ("border-top-right-radius", "5px")
+    , ("border-bottom-right-radius", "5px")
     ]
 
 channelPrimaryBgColor =
@@ -183,13 +213,21 @@ channelPrimaryFontColor =
   style
     [("color", "#AB9BA9")]
 
+channelSecondaryFontColor =
+  style
+    [("color", "#7C6A7A")]
+
+channelHoverColor =
+  style
+    [("color", "#3E313C")]
+
 whiteFontColor =
   style
    [("color", "#FFFFFF")]
 
 messageContainerStyle =
   style
-    [ ("width", "80%")
+    [ ("width", "84%")
     , ("float", "right")
     , ("background-color", "#FFFFFF")
     ]
