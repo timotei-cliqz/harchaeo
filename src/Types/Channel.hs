@@ -14,10 +14,11 @@ import Types.User   (UserId)
 -- * Channel
 
 type ChannelId = Text
+type ChannelName = Text
 
 data Channel = Channel
     { id            :: !ChannelId
-    , name          :: !Text
+    , name          :: !ChannelName
     , creator       :: !UserId
     , created       :: !Text
     , is_archived   :: !Bool

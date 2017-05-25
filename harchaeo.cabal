@@ -17,11 +17,11 @@ library
   hs-source-dirs:      src
   ghc-options:         -Wall
   exposed-modules:     Lib
+                     , Api
+                     , ElmCodeGenerator
                      , Types.Channel
                      , Types.Message
                      , Types.User
-                     , Api
-                     , ElmCodeGenerator
   other-modules:       Archive
   build-depends:       base >= 4.7 && < 5
                      , aeson
@@ -29,12 +29,11 @@ library
                      , containers
                      , directory
                      , elm-export
-                     , elm-export
+                     , errors
                      , filepath
                      , random
                      , servant
                      , servant-elm
-                     , servant-server
                      , servant-server
                      , text
                      , transformers

@@ -26,7 +26,7 @@ main = do
     let p = fromMaybe 8000 (port args)
 
     -- Serve archive content
-    json <- loadArchive $ path args
-    case json of
-        Just archive -> run archive p
-        Nothing -> return ()
+    result <- loadArchive $ path args
+    case result of
+      Left err -> putStrLn err
+      Right archive -> run archive p
